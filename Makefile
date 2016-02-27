@@ -20,7 +20,7 @@ SHARED = \
 	data/lg-en.lng \
 	data/setup-en.lng
 
-LAUCHER = \
+LAUNCHER = \
 	data/installer-launcher-cli.desktop
 
 all: $(BIN)
@@ -53,7 +53,9 @@ install:
 
 	install -dm0755 $(DESTDIR)$(PREFIX)/share/manjaro-tools
 	install -m0644 ${SHARED} $(DESTDIR)$(PREFIX)/share/manjaro-tools
-	install -m0644 ${LAUCHER} $(DESTDIR)$(PREFIX)/share/applications
+
+	install -dm0755 $(DESTDIR)$(PREFIX)/share/applications
+	install -m0644 ${LAUNCHER} $(DESTDIR)$(PREFIX)/share/applications
 
 
 uninstall_base:
@@ -61,7 +63,7 @@ uninstall_base:
 	for f in ${BIN}; do rm -f $(DESTDIR)$(PREFIX)/bin/$$f; done
 	for f in ${SHARED}; do rm -f $(DESTDIR)$(PREFIX)/share/manjaro-tools/$$f; done
 	for f in ${LIBS}; do rm -f $(DESTDIR)$(PREFIX)/lib/manjaro-tools/$$f; done
-	for f in ${LAUCHER}; do rm -f $(DESTDIR)$(PREFIX)/share/manjaro-tools/$$f; done
+	for f in ${LAUNCHER}; do rm -f $(DESTDIR)$(PREFIX)/share/applications/$$f; done
 
 install: install
 
