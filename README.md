@@ -1,0 +1,2 @@
+manjaro-cli-installer
+=============
