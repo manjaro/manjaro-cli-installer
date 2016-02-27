@@ -7,7 +7,7 @@ SYSCONF = \
 	data/cli-installer.conf
 
 BIN = \
-	bin/setup \
+	bin/cli-installer \
 	bin/km \
 	bin/lg
 
@@ -18,17 +18,17 @@ LIBS = \
 SHARED = \
 	data/km-en.lng \
 	data/lg-en.lng \
-	data/setup-en.lng
+	data/cli-installer-en.lng
 
 LAUNCHER = \
-	data/installer-launcher-cli.desktop
+	data/cli-installer.desktop
 
 all: $(BIN)
 
 edit = sed -e "s|@datadir[@]|$(DESTDIR)$(PREFIX)/share/manjaro-tools|g" \
 	-e "s|@sysconfdir[@]|$(DESTDIR)$(SYSCONFDIR)/manjaro-tools|g" \
 	-e "s|@libdir[@]|$(DESTDIR)$(PREFIX)/lib/manjaro-tools|g" \
-	-e "s|@version@|${Version}|"
+	-e "s|@VER@|${Version}|"
 
 %: %.in Makefile
 	@echo "GEN $@"

@@ -1,17 +1,19 @@
 #!/bin/bash
 
-[[ -r /usr/lib/manjaro-tools/util.sh ]] && source /usr/lib/manjaro-tools/util.sh
+LIBDIR='@libdir@'
+DATADIR='@datadir@'
+SYSCONFDIR='@sysconfdir@'
 
-load_profile_config "/usr/share/manjaro-tools/profile.conf"
+[[ -r ${LIBDIR}/util.sh ]] && source ${LIBDIR}/util.sh
+
+load_profile_config "${SYSCONFDIR}/cli-installer.conf"
+load_profile_config "${DATADIR}/profile.conf"
 
 VER=0.9.1
 # Basis settings
 TITLE="Manjaro Linux Installation Framework $VER"
 PKG_OVERLAY="/opt/live/pkgs"
 #DIALOGRC="./setuprc"
-
-LIBDIR='/usr/lib/cli-installer'
-DATADIR='/usr/share/cli-installer'
 
 arch=$(uname -m)
 username=''
