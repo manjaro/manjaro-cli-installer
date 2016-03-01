@@ -9,6 +9,10 @@ SYSCONFDIR='@sysconfdir@'
 load_profile_config "${SYSCONFDIR}/cli-installer.conf"
 load_profile_config "${DATADIR}/profile.conf"
 
+[[ -r ${LIBDIR}/util-live.sh ]] && source ${LIBDIR}/util-live.sh
+[[ -r ${LIBDIR}/util-mnt.sh ]] && source ${LIBDIR}/util-mnt.sh
+[[ -r ${LIBDIR}/util-inst.sh ]] && source ${LIBDIR}/util-inst.sh
+
 VER=0.9.1
 # Basis settings
 TITLE="Manjaro Linux Installation Framework $VER"
@@ -24,7 +28,7 @@ if [ -e "${img_path}/${profile}-image.sqfs" ] ; then
 	DESKTOP_IMG="${profile}-image"
 fi
 
-ANSWER="/tmp/.setup"
+ANSWER="/tmp/.cli-installer"
 # use the first VT not dedicated to a running console
 LOG="/dev/tty8"
 # don't use /mnt because it's intended to mount other things there!
@@ -83,9 +87,7 @@ S_PRECONFIG=0   # pre configuration editing
 # main menu selection tracker
 NEXTITEM=""
 
-[[ -r /usr/lib/manjaro-tools/util-live.sh ]] && source /usr/lib/manjaro-tools/util-live.sh
-[[ -r ${LIBDIR}/util-mnt.sh ]] && source ${LIBDIR}/util-mnt.sh
-[[ -r ${LIBDIR}/util-inst.sh ]] && source ${LIBDIR}/util-inst.sh
+
 
 # activate_dmraid()
 # activate dmraid devices
