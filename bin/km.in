@@ -3,6 +3,10 @@
 # adapted for Cinnarch by Alex Filgueira <faidoc@gmail.com>
 # adapted for Manjaro by Philip Müller <philm@manjaro.org>
 
+LIBDIR='@libdir@'
+DATADIR='@datadir@'
+SYSCONFDIR='@sysconfdir@'
+
 abort(){
     DIALOG --yesno "${_abort}" 6 42 || return 0
     [[ -e /tmp/.km ]] && rm -f /tmp/.km
@@ -110,11 +114,9 @@ export LANG=en_US.UTF-8
 export LC_MESSAGES=en_US.UTF-8
 
 # Translation
-[[ -r /usr/lib/manjaro-tools/util-live.sh ]] && source /usr/lib/manjaro-tools/util-live.sh
+[[ -r ${LIBDIR}/util-live.sh ]] && source ${LIBDIR}/util-live.sh
 
 LOCALE=$(get_country)
-
-DATADIR='/usr/share/cli-installer'
 
 # English
 source ${DATADIR}/km-en.lng

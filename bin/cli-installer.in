@@ -4047,7 +4047,7 @@ VIDEO="$(kernel_cmdline xdriver no)"
 LOCALE=$(get_country)
 
 # English
-source ${DATADIR}/setup-en.lng
+source ${DATADIR}/cli-installer-en.lng
 
 DIALOG --msgbox "${_instwelcomemessage}" 12 65
 
