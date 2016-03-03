@@ -16,7 +16,12 @@ load_profile_config "${DATADIR}/profile.conf"
 VER=0.9.1
 # Basis settings
 TITLE="Manjaro Linux Installation Framework $VER"
-PKG_OVERLAY="/opt/live/pkgs"
+
+REPO_PATH='/opt/live'
+[[ -d /opt/livecd ]] && REPO_PATH='/opt/livecd'
+
+PKG_OVERLAY="${REPO_PATH}/pkgs"
+
 #DIALOGRC="./setuprc"
 
 arch=$(uname -m)
@@ -49,7 +54,6 @@ INITRAMFS_FALLBACK=${fallback_image#*/boot/}
 
 # abstract the common pacman args
 PACMAN="pacman --root ${DESTDIR} --config /etc/pacman.conf --noconfirm --noprogressbar"
-PACMAN_LNG="pacman --root ${DESTDIR} --config /opt/live/pacman-lng.conf --noconfirm --noprogressbar"
 
 # sources
 SYNC_URL=

@@ -268,34 +268,34 @@ hd_config(){
 
 	# Install drivers
 
-	if [ -e "/opt/live/pacman-gfx.conf" ] ; then
+	if [ -e "${REPO_PATH}/pacman-gfx.conf" ] ; then
 		DIALOG --infobox "${_installvideodriver}"  6 40
 
-		mkdir -p ${DESTDIR}/opt/live
-		mount -o bind /opt/live ${DESTDIR}/opt/live > /tmp/mount.pkgs.log
-		ls ${DESTDIR}/opt/live >> /tmp/mount.pkgs.log
+		mkdir -p ${DESTDIR}${REPO_PATH}
+		mount -o bind ${REPO_PATH} ${DESTDIR}${REPO_PATH} > /tmp/mount.pkgs.log
+		ls ${DESTDIR}${REPO_PATH} >> /tmp/mount.pkgs.log
 
 		# Install xf86-video driver
 		if  [ "${USENONFREE}" == "yes" ] || [ "${USENONFREE}" == "true" ]; then
 			if  [ "${VIDEO}" == "vesa" ]; then
-				chroot ${DESTDIR} mhwd --install pci video-vesa --pmconfig "/opt/live/pacman-gfx.conf" &>/dev/null
+				chroot ${DESTDIR} mhwd --install pci video-vesa --pmconfig "${REPO_PATH}/pacman-gfx.conf" &>/dev/null
 			else
-				chroot ${DESTDIR} mhwd --auto pci nonfree 0300 --pmconfig "/opt/live/pacman-gfx.conf" &>/dev/null
+				chroot ${DESTDIR} mhwd --auto pci nonfree 0300 --pmconfig "${REPO_PATH}/pacman-gfx.conf" &>/dev/null
 			fi
 		else
 			if  [ "${VIDEO}" == "vesa" ]; then
-				chroot ${DESTDIR} mhwd --install pci video-vesa --pmconfig "/opt/live/pacman-gfx.conf" &>/dev/null
+				chroot ${DESTDIR} mhwd --install pci video-vesa --pmconfig "${REPO_PATH}/pacman-gfx.conf" &>/dev/null
 			else
-				chroot ${DESTDIR} mhwd --auto pci free 0300 --pmconfig "/opt/live/pacman-gfx.conf" &>/dev/null
+				chroot ${DESTDIR} mhwd --auto pci free 0300 --pmconfig "${REPO_PATH}/pacman-gfx.conf" &>/dev/null
 			fi
 		fi
 
 		# Install network drivers
-		chroot ${DESTDIR} mhwd --auto pci free 0200 --pmconfig "/opt/live/pacman-gfx.conf" &>/dev/null
-		chroot ${DESTDIR} mhwd --auto pci free 0280 --pmconfig "/opt/live/pacman-gfx.conf" &>/dev/null
+		chroot ${DESTDIR} mhwd --auto pci free 0200 --pmconfig "${REPO_PATH}/pacman-gfx.conf" &>/dev/null
+		chroot ${DESTDIR} mhwd --auto pci free 0280 --pmconfig "${REPO_PATH}/pacman-gfx.conf" &>/dev/null
 
-		umount ${DESTDIR}/opt/live
-		rmdir ${DESTDIR}/opt/live
+		umount ${DESTDIR}${REPO_PATH}
+		rmdir ${DESTDIR}${REPO_PATH}
 	fi
 
 	# setup system services
@@ -883,27 +883,6 @@ _post_process(){
 	#
 	DIALOG --infobox "${_localegen}" 0 0
 	chroot ${DESTDIR} locale-gen &> /dev/null
-
-	# installing localization packages
-	if [ -e "${img_path}/lng-image.sqfs" ] ; then
-		configure_translation_pkgs ${DESTDIR}
-		${PACMAN_LNG} -Sy
-		if [ -e "${img_path}/kde-image.sqfs" ] ; then
-			${PACMAN_LNG} -S ${KDE_LNG_INST} &> /dev/null
-		fi
-		if [ -e "/usr/bin/firefox" ] ; then
-			${PACMAN_LNG} -S ${FIREFOX_LNG_INST} &> /dev/null
-		fi
-		if [ -e "/usr/bin/thunderbird" ] ; then
-			${PACMAN_LNG} -S ${THUNDER_LNG_INST} &> /dev/null
-		fi
-		if [ -e "/usr/bin/libreoffice" ] ; then
-			${PACMAN_LNG} -S ${LIBRE_LNG_INST} &> /dev/null
-		fi
-		if [ -e "/usr/bin/hunspell" ] ; then
-			${PACMAN_LNG} -S ${HUNSPELL_LNG_INST} &> /dev/null
-		fi
-	fi
 
 	# check if we are running inside a virtual machine and unistall kalu
 	if [ -e "${DESTDIR}/usr/bin/kalu" ] ; then
