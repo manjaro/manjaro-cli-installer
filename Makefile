@@ -58,7 +58,7 @@ install:
 	install -m0644 ${LAUNCHER} $(DESTDIR)$(PREFIX)/share/applications
 
 
-uninstall_base:
+uninstall:
 	for f in ${SYSCONF}; do rm -f $(DESTDIR)$(SYSCONFDIR)/manjaro-tools/$$f; done
 	for f in ${BIN}; do rm -f $(DESTDIR)$(PREFIX)/bin/$$f; done
 	for f in ${SHARED}; do rm -f $(DESTDIR)$(PREFIX)/share/manjaro-tools/$$f; done
