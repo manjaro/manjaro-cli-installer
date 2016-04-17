@@ -13,7 +13,7 @@ load_profile_config "${DATADIR}/profile.conf"
 [[ -r ${LIBDIR}/util-mnt.sh ]] && source ${LIBDIR}/util-mnt.sh
 [[ -r ${LIBDIR}/util-inst.sh ]] && source ${LIBDIR}/util-inst.sh
 
-VER=0.9.1
+VER=0.9.2
 # Basis settings
 TITLE="Manjaro Linux Installation Framework $VER"
 
@@ -35,7 +35,7 @@ fi
 
 ANSWER="/tmp/.cli-installer"
 # use the first VT not dedicated to a running console
-LOG="/dev/tty8"
+LOG="/var/log/cli-installer.log"
 # don't use /mnt because it's intended to mount other things there!
 mkdir -p /install
 DESTDIR="/install"
@@ -267,11 +267,11 @@ additional_blockdevices_partitions(){
 					#  $(${_BLKID} -p -i -o value -s TYPE /dev/${part} | grep "LVM2_member")
 					#- part of luks device
 					#  $(${_BLKID} -p -i -o value -s TYPE /dev/${part} | grep "crypto_LUKS")
-					#- extended partition on device
+					#- extended partition on device [does not seem to be working, CHECK REMOVED]
 					#  $(sfdisk -c /dev/${disk} $(echo ${part} | sed -e "s#${disk}\p##g" 2>/dev/null | grep "5")
 					#- bios_grub partitions
 					# $(echo ${part} | grep "[a-z]$(parted -s /dev/${disk} print 2>/dev/null | grep bios_grub | cut -d " " -f 2)$")
-					if ! [[ "$(cat /proc/mdstat 2>/dev/null | grep ${part})" || "$(${_BLKID} -p -i -o value -s TYPE /dev/${part} | grep "LVM2_member")" || "$(${_BLKID} -p -i -o value -s TYPE /dev/${part} | grep "crypto_LUKS")" || "$(sfdisk -c /dev/${disk} $(echo ${part} | sed -e "s#${disk}\p##g") 2>/dev/null | grep "5")" || "$(echo ${part} | grep "[a-z]$(parted -s /dev/${disk} print 2>/dev/null | grep bios_grub | cut -d " " -f 2)$")" ]]; then
+					if ! [[ "$(cat /proc/mdstat 2>/dev/null | grep ${part})" || "$(${_BLKID} -p -i -o value -s TYPE /dev/${part} | grep "LVM2_member")" || "$(${_BLKID} -p -i -o value -s TYPE /dev/${part} | grep "crypto_LUKS")" || "$(echo ${part} | grep "[a-z]$(parted -s /dev/${disk} print 2>/dev/null | grep bios_grub | cut -d " " -f 2)$")" ]]; then
 						echo "/dev/${part}"
 						[[ "${1}" ]] && echo ${1}
 					fi
@@ -290,11 +290,11 @@ additional_blockdevices_partitions(){
 				#  $(${_BLKID} -p -i -o value -s TYPE /dev/${i} | grep "LVM2_member")
 				#- part of luks device
 				#  $(${_BLKID} -p -i -o value -s TYPE /dev/${i} | grep "crypto_LUKS")
-				#- extended partition on device
+				#- extended partition on device [does not seem to be working, CHECK REMOVED]
 				#  $(sfdisk -c /dev/${dev} $(echo ${i} | sed -e "s#${dev}\p##g" 2>/dev/null | grep "5")
 				#- bios_grub partitions
 				# $(echo ${i} | grep "[a-z]$(parted -s /dev/${dev} print 2>/dev/null | grep bios_grub | cut -d " " -f 2)$")
-				if ! [[ "$(cat /proc/mdstat 2>/dev/null | grep ${i})" || "$(${_BLKID} -p -i -o value -s TYPE /dev/${i} | grep "LVM2_member")" || $(${_BLKID} -p -i -o value -s TYPE /dev/${i} | grep "crypto_LUKS") || "$(sfdisk -c /dev/${dev} $(echo ${i} | sed -e "s#${dev}\p##g") 2>/dev/null | grep "5")" || "$(echo ${i} | grep "[a-z]$(parted -s /dev/${dev} print 2>/dev/null | grep bios_grub | cut -d " " -f 2)$")" ]]; then
+				if ! [[ "$(cat /proc/mdstat 2>/dev/null | grep ${i})" || "$(${_BLKID} -p -i -o value -s TYPE /dev/${i} | grep "LVM2_member")" || $(${_BLKID} -p -i -o value -s TYPE /dev/${i} | grep "crypto_LUKS") || "$(echo ${i} | grep "[a-z]$(parted -s /dev/${dev} print 2>/dev/null | grep bios_grub | cut -d " " -f 2)$")" ]]; then
 					echo "/dev/${i}"
 					[[ "${1}" ]] && echo ${1}
 				fi
@@ -425,13 +425,13 @@ default_partition_check(){
 			#  $(${_BLKID} -p -i -o value -s TYPE /dev/${part} | grep "LVM2_member")
 			#- part of luks device
 			#  $(${_BLKID} -p -i -o value -s TYPE /dev/${part} | grep "crypto_LUKS")
-			#- extended partition
+			#- extended partition [does not seem to be working, CHECK REMOVED]
 			#  $(sfdisk -c /dev/${disk} $(echo ${part} | sed -e "s#${disk}##g") 2>/dev/null | grep "5")
-			#- extended partition on raid partition device and mmc device
+			#- extended partition on raid partition device and mmc device [does not seem to be working, CHECK REMOVED]
 			#  $(sfdisk -c /dev/${disk} $(echo ${part} | sed -e "s#${disk}\p##g" 2>/dev/null | grep "5")
 			#- bios_grub partitions
 			# $(echo ${part} | grep "[a-z]$(parted -s /dev/${disk} print 2>/dev/null | grep bios_grub | cut -d " " -f 2)$")
-			if ! [[ "$(cat /proc/mdstat 2>/dev/null | grep ${part})" || "$(${_BLKID} -p -i -o value -s TYPE /dev/${part} | grep "LVM2_member")" || "$(${_BLKID} -p -i -o value -s TYPE /dev/${part} | grep "crypto_LUKS")" || "$(sfdisk -c /dev/${disk} $(echo ${part} | sed -e "s#${disk}##g") 2>/dev/null | grep "5")" || "$(sfdisk -c /dev/${disk} $(echo ${part} | sed -e "s#${disk}\p##g") 2>/dev/null | grep "5")" || "$(echo ${part} | grep "[a-z]$(parted -s /dev/${disk} print 2>/dev/null | grep bios_grub | cut -d " " -f 2)$")" ]]; then
+			if ! [[ "$(cat /proc/mdstat 2>/dev/null | grep ${part})" || "$(${_BLKID} -p -i -o value -s TYPE /dev/${part} | grep "LVM2_member")" || "$(${_BLKID} -p -i -o value -s TYPE /dev/${part} | grep "crypto_LUKS")" || "$(echo ${part} | grep "[a-z]$(parted -s /dev/${disk} print 2>/dev/null | grep bios_grub | cut -d " " -f 2)$")" ]]; then
 				if [[ -d ${block}/${disk}/${part} ]]; then
 					echo "/dev/${part}"
 					[[ "${1}" ]] && echo ${1}
@@ -2535,11 +2535,10 @@ do_uefi_i386(){
 }
 
 do_uefi_efibootmgr(){
-	modprobe -q efivars
-	if [[ "$(lsmod | grep ^efivars)" ]]; then
-		chroot_mount
-		if [[ -d "${DESTDIR}/sys/firmware/efi/vars" ]]; then
-			cat << EFIBEOF > "${DESTDIR}/efibootmgr_run.sh"
+	modprobe -q efivarfs
+	chroot_mount
+	if [[ -d "${DESTDIR}/sys/firmware/efi/efivars" ]]; then
+		cat << EFIBEOF > "${DESTDIR}/efibootmgr_run.sh"
 #!/usr/bin/env bash
 
 for _bootnum in \$(efibootmgr | grep '^Boot[0-9]' | fgrep -i "${_EFIBOOTMGR_LABEL}" | cut -b5-8) ; do
@@ -2552,17 +2551,13 @@ echo
 
 EFIBEOF
 
-			chmod a+x "${DESTDIR}/efibootmgr_run.sh"
-			chroot "${DESTDIR}" "/bin/bash" "/efibootmgr_run.sh" &>"/tmp/efibootmgr_run.log"
-			mv "${DESTDIR}/efibootmgr_run.sh" "/tmp/efibootmgr_run.sh"
-		else
-			DIALOG --msgbox "${DESTDIR}/sys/firmware/efi/vars/ directory not found. Check whether you have booted in UEFI boot mode, manually load efivars kernel module and create a boot entry for ${_EFIBOOTMGR_LABEL} in the UEFI Boot Manager." 0 0
-		fi
-
-		chroot_umount
+		chmod a+x "${DESTDIR}/efibootmgr_run.sh"
+		chroot "${DESTDIR}" "/bin/bash" "/efibootmgr_run.sh" &>"/tmp/efibootmgr_run.log"
+		mv "${DESTDIR}/efibootmgr_run.sh" "/tmp/efibootmgr_run.sh"
 	else
-		DIALOG --msgbox "efivars kernel module was not loaded properly. Manually load it and create a boot entry for DISC ${_EFIBOOTMGR_DISC} , PART ${_EFIBOOTMGR_PART_NUM} and LOADER \\EFI\\${_EFIBOOTMGR_LOADER_DIR}\\${_EFIBOOTMGR_LOADER_FILE} , in UEFI Boot Manager using efibootmgr." 0 0
+		DIALOG --msgbox "${DESTDIR}/sys/firmware/efi/efivars/ directory not found. Check whether you have booted in UEFI boot mode, manually load efivarfs kernel module and create a boot entry for ${_EFIBOOTMGR_LABEL} in the UEFI Boot Manager." 0 0
 	fi
+	chroot_umount
 
 	unset _EFIBOOTMGR_LABEL
 	unset _EFIBOOTMGR_DISC
