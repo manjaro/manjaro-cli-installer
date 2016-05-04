@@ -337,10 +337,6 @@ hd_config(){
 	DIALOG --infobox "${_fixapps}" 6 40
 	sleep 3
 
-	# add BROWSER var
-	echo "BROWSER=/usr/bin/xdg-open" >> ${DESTDIR}/etc/environment
-	echo "BROWSER=/usr/bin/xdg-open" >> ${DESTDIR}/etc/skel/.bashrc
-	echo "BROWSER=/usr/bin/xdg-open" >> ${DESTDIR}/etc/profile
 	# add TERM var
 	if [ -e "${img_path}/mate-image.sqfs" ] ; then
 		echo "TERM=mate-terminal" >> ${DESTDIR}/etc/environment
