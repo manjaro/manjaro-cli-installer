@@ -6,7 +6,6 @@ SYSCONFDIR='@sysconfdir@'
 
 [[ -r ${LIBDIR}/util.sh ]] && source ${LIBDIR}/util.sh
 
-load_profile_config "${SYSCONFDIR}/cli-installer.conf"
 load_profile_config "${DATADIR}/profile.conf"
 
 [[ -r ${LIBDIR}/util-live.sh ]] && source ${LIBDIR}/util-live.sh
@@ -43,11 +42,7 @@ DESTDIR="/install"
 EDITOR="nano"
 _BLKID="blkid -c /dev/null"
 
-# load kernel preset
-#source /etc/mkinitcpio.d/${kernel}.preset
-
 # name of the kernel image
-#VMLINUZ=${ALL_kver#*/boot/}
 get_linuz(){
 	local kern=$(ls /boot | grep vmlinuz)
 	echo ${kern}
