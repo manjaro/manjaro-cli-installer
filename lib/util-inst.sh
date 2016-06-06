@@ -614,7 +614,6 @@ installsystem_cp(){
 		_result="${_installationsuccess}"
 	fi
 	rm /tmp/.install-retcode
-	fi
 
 	DIALOG --title "$_result" --exit-label "${_continue_label}" \
 		--textbox "/tmp/rsyncerror.log" 18 60 || return 1
