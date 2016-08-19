@@ -337,10 +337,6 @@ hd_config(){
 	DIALOG --infobox "${_fixapps}" 6 40
 	sleep 3
 
-	# add BROWSER var
-	echo "BROWSER=/usr/bin/xdg-open" >> ${DESTDIR}/etc/environment
-	echo "BROWSER=/usr/bin/xdg-open" >> ${DESTDIR}/etc/skel/.bashrc
-	echo "BROWSER=/usr/bin/xdg-open" >> ${DESTDIR}/etc/profile
 	# add TERM var
 	if [ -e "${img_path}/mate-image.sqfs" ] ; then
 		echo "TERM=mate-terminal" >> ${DESTDIR}/etc/environment
@@ -523,17 +519,20 @@ installsystem_unsquash(){
 	fi
 	sed -i '/dir_scan: failed to open directory [^ ]*, because File exists/d' /tmp/unsquasherror.log
 
-	#unsquashfs -f -d ${DESTDIR} ${img_path}/de-image.sqfs
-	UNSQUASH_TARGET=${DESTDIR}
-	SQF_FILE=${DESKTOP_IMG}.sqfs
-	run_unsquashfs
-	echo $? > /tmp/.install-retcode
-	if [ $(cat /tmp/.install-retcode) -ne 0 ]; then
-		echo -e "\n${_installationfail}" >>/tmp/unsquasherror.log
-	else
-		echo -e "\n => ${DESKTOP_IMG}: ${_installationsuccess}" >>/tmp/unsquasherror.log
+	# add check here, to make it work if a DE-image is not present
+	if [[ -n ${DESKTOP_IMG} ]]; then
+		#unsquashfs -f -d ${DESTDIR} ${img_path}/de-image.sqfs
+		UNSQUASH_TARGET=${DESTDIR}
+		SQF_FILE=${DESKTOP_IMG}.sqfs
+		run_unsquashfs
+		echo $? > /tmp/.install-retcode
+		if [ $(cat /tmp/.install-retcode) -ne 0 ]; then
+			echo -e "\n${_installationfail}" >>/tmp/unsquasherror.log
+		else
+			echo -e "\n => ${DESKTOP_IMG}: ${_installationsuccess}" >>/tmp/unsquasherror.log
+		fi
+		sed -i '/dir_scan: failed to open directory [^ ]*, because File exists/d' /tmp/unsquasherror.log
 	fi
-	sed -i '/dir_scan: failed to open directory [^ ]*, because File exists/d' /tmp/unsquasherror.log
 
 	# finished, display scrollable output
 	local _result=''
@@ -589,19 +588,21 @@ installsystem_cp(){
 		echo -e "\n => Root-Image: ${_installationsuccess}" >>/tmp/rsyncerror.log
 	fi
 
-	#rsync -av --progress /source/de-image ${DESTDIR}
-	CP_SOURCE=/source/${DESKTOP_IMG}
-	mkdir -p ${CP_SOURCE}
-	CP_TARGET=${DESTDIR}
-	SQF_FILE=${DESKTOP_IMG}.sqfs
-	run_mount_sqf
-	run_cp
-	run_umount_sqf
-	echo $? > /tmp/.install-retcode
-	if [ $(cat /tmp/.install-retcode) -ne 0 ]; then
-		echo -e "\n${_installationfail}" >>/tmp/rsyncerror.log
-	else
-		echo -e "\n => ${DESKTOP_IMG}: ${_installationsuccess}" >>/tmp/rsyncerror.log
+	if [[ -n ${DESKTOP_IMG} ]];then
+		#rsync -av --progress /source/de-image ${DESTDIR}
+		CP_SOURCE=/source/${DESKTOP_IMG}
+		mkdir -p ${CP_SOURCE}
+		CP_TARGET=${DESTDIR}
+		SQF_FILE=${DESKTOP_IMG}.sqfs
+		run_mount_sqf
+		run_cp
+		run_umount_sqf
+		echo $? > /tmp/.install-retcode
+		if [ $(cat /tmp/.install-retcode) -ne 0 ]; then
+			echo -e "\n${_installationfail}" >>/tmp/rsyncerror.log
+		else
+			echo -e "\n => ${DESKTOP_IMG}: ${_installationsuccess}" >>/tmp/rsyncerror.log
+		fi
 	fi
 
 	# finished, display scrollable output
