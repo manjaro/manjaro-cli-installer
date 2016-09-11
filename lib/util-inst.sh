@@ -810,6 +810,8 @@ _setup_user(){
 
 	if DIALOG --yesno "${_addsudouserdl1}${REPLY}${_addsudouserdl2}" 6 40;then
 		echo "${PASSWDUSER}     ALL=(ALL) ALL" >> ${DESTDIR}/etc/sudoers
+	else
+		chroot ${DESTDIR} gpasswd -d "${PASSWDUSER}" wheel
 	fi
 	sed -i -e 's|# %wheel ALL=(ALL) ALL|%wheel ALL=(ALL) ALL|g' ${DESTDIR}/etc/sudoers
 	chmod 0440 ${DESTDIR}/etc/sudoers
