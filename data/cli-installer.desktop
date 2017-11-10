@@ -1,8 +1,11 @@
 [Desktop Entry]
 Name=Install Manjaro Linux (cli)
+Name[da]=Installer Manjaro Linux (cli)
 Name[pl]=Zainstaluj Manjaro Linux (cli)
 GenericName=Cli Installer
+GenericName[da]=Cli-installationsprogram
 Comment=Install the operating system to disk
+Comment[da]=Installer styresystemet på disk
 Comment[pl]=Zainstaluj Manjaro Linux na swoim komputerze
 Exec=sudo /usr/bin/cli-installer
 Icon=utilities-terminal
