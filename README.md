@@ -1,4 +1,5 @@
-manjaro-cli-installer
-=============
+This repo has been archived. Our code is now hosted at
 
-Cli installer Manjaro
+https://gitlab.manjaro.org/
+
+See you there!
